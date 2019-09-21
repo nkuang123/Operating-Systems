@@ -1,0 +1,4 @@
+Hello world, my name is Mike!
+Today I'm going to teach you how to write C.
+First you need a text editor.
+edit this first.
