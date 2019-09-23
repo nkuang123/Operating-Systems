@@ -27,9 +27,9 @@ int main(int argc, char *argv[]) {
 		if ((next = fgetc(stream)) != ch) {
 			ungetc(next, stream);
 
-			fwrite(&count, sizeof(int), 1, write_ptr);
-			fwrite(&ch, 1, sizeof(ch), write_ptr);
-			printf("%x%c", count, ch);
+			fwrite(&count, sizeof(int), 1, stdout);
+			fwrite(&ch, 1, sizeof(ch), stdout);
+			// printf("%x%c", count, ch);
 
 
 			count = 0;

@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 // Function declarations
-void print_lines_that_match(char *file_name, char *search_term);						 
+void print_lines_that_match(FILE* stream, char *search_term);						 
 
 /* 
 	Example of how vgrep will be called:
@@ -35,20 +35,33 @@ int main(int argc, char *argv[]) {
 
 	fclose(stream);
 
-	if (search_term_supplied) {
-		printf("search term detected\n");
-	} else {
-		// Match none
-		exit(0);
-	}
+	// if (search_term_supplied) {
+	// 	printf("search term detected\n");
+	// } else {
+	// 	// Match none
+	// 	exit(0);
+	// }
 
 	// Extract the search term.
 	char *search_term = argv[1];
 
+	// Only search term supplied, read from stdin
+	if (argc == 2) {
+		print_lines_that_match(stdin, search_term);
+	}
+
 	for (int i = 2; i < argc; i++) {
 		// Extract 
 		char *file_name = argv[i];
-		print_lines_that_match(file_name, search_term);
+
+		FILE *stream = fopen(file_name, "r");
+
+		if (stream == NULL) {
+			printf("vgrep: cannot open file \'%s\'\n", file_name);
+			exit(1);
+		}
+
+		print_lines_that_match(stream, search_term);
 	}
 
 	
@@ -56,14 +69,7 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
-void print_lines_that_match(char *file_name, char *search_term) {
-
-	FILE *stream = fopen(file_name, "r");
-
-	if (stream == NULL) {
-		printf("vgrep: cannot open file \'%s\'\n", file_name);
-		exit(1);
-	}
+void print_lines_that_match(FILE *stream, char *search_term) {
 
 	char *line = NULL;
 	size_t len = 0;
