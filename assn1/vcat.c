@@ -1,11 +1,18 @@
-/* C implementation of the Linux utility cat */
+/*****************************************************************************
+* vcat.c
+* C implementation of the Linux utility cat 
+* NAME: Norman Kuang
+*****************************************************************************/
 
+// Libraries
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
-#define MAX_FILE_LINE_LEN 999  // Arbitrary file line length.	
+// Constants
+#define MAX_FILE_LINE_LEN INT_MAX  // Arbitrary file line length.	
 
-// Function declaration
+// Function declarations
 void print_file(char *file_name);											 
 
 int main(int argc, char *argv[]) {
@@ -15,7 +22,6 @@ int main(int argc, char *argv[]) {
 	// file is found at argv[1].
 	for (int i = 1; i < argc; i++) {
 		// Let's extract the filename and store it.
-		// Elements of argv are pointers to a char array
 		char *file_name = argv[i];
 
 		print_file(file_name);
@@ -27,38 +33,25 @@ int main(int argc, char *argv[]) {
 /* print_file() takes the name of a file and prints out its contents */
 void print_file(char *file_name) {
 	// Open the file
-	FILE *f_ptr = fopen(file_name, "r");
+	FILE *stream = fopen(file_name, "r");
 
 	// Ensure we are able to open the file
-	if (f_ptr == NULL) {
-		printf("vcat: cannot open file\n");
+	if (stream == NULL) {
+		printf("vcat: cannot open file\n");  // Error message.
 		exit(1);
 	}
 
-	// Method 1) Using fgetc(). Get the next char from the file and advance
-	// 	the file position indicator. Advances char-by-char until EOF.
+	/*
+	*  This procedure uses fgetc(). Get the next char from the file stream, 
+	*  print the character, and advance the file position indicator. Advances 
+	*  char-by-char until EOF.
+	*/
 	char ch;
 
-	while ((ch = fgetc(f_ptr)) != EOF) {
+	while ((ch = fgetc(stream)) != EOF) {
 		printf("%c", ch);
 	}
 
-	// Method 2) Using fgets(). Since fgets requires that we specify a char 
-	// array to store the line to be read, we need to instantiate a char
-	// array and pass its length argument into fgets. 
-	// Reads (MAX_FILE_LINE_LEN - 1) or until newline or EOF, whichever comes
-	// first
-
-	// char str[MAX_FILE_LINE_LEN];
-
-	// while (1) {  // Loop until we reach EOF
-	// 	if (fgets(str, MAX_FILE_LINE_LEN, f_ptr)) {
-	// 		printf("%s", str);
-	// 	} else {
-	// 		break;
-	// 	}
-	// } 
-
 	// Finished. Let's close the file.
-	fclose(f_ptr);
+	fclose(stream);
 }
